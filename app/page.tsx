@@ -71,9 +71,6 @@ export default function Home() {
                     <span className="text-sm px-2.5 py-1 rounded-md bg-[#f8f8f8] text-[#8B4513] border border-[#daa520]/20">
                       {beer.type}
                     </span>
-                    <span className="text-sm px-2.5 py-1 rounded-md bg-[#fafafa] text-[#8B4513] border border-[#daa520]/20">
-                      {beer.brewery}
-                    </span>
                     <span className="text-sm px-2.5 py-1 rounded-md bg-[#f8f8f8] text-[#8B4513] border border-[#daa520]/20">
                       {beer.region}
                     </span>
