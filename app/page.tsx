@@ -21,7 +21,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center py-12 px-4 md:px-24 bg-white">
       <div className="w-full max-w-2xl">
         <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold tracking-tight mb-4 bg-gradient-to-r from-[#462400] to-[#8B4513] text-transparent bg-clip-text">
+          <h1 className="text-4xl font-pacifico tracking-tight mb-4 bg-gradient-to-r from-[#462400] to-[#8B4513] text-transparent bg-clip-text">
             German Beer Explorer
           </h1>
           <div className="relative w-full h-2.5 bg-[#f5e6c9] rounded-full overflow-hidden mb-2">
