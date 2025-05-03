@@ -66,7 +66,7 @@ export default function Home() {
                   )}
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold text-[#462400]">{beer.name}</h2>
+                  <h2 className="text-xl font-pacifico font-semibold text-[#a86823]">{beer.name}</h2>
                   <div className="flex flex-wrap gap-2 mt-2">
                     <span className="text-sm px-2.5 py-1 rounded-md bg-[#f8f8f8] text-[#8B4513] border border-[#daa520]/20">
                       {beer.type}
