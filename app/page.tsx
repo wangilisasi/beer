@@ -1,5 +1,6 @@
 import BeerList from '@/components/BeerList';
-import type { Beer } from "@/lib/generated/prisma"; // Keep type import
+; // Keep type import
+import  type {Beer} from "@prisma/client";
 
 async function getBeers(): Promise<Beer[]> {
   // Fetch data from the API route

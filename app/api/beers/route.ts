@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
-import prisma  from '@/prisma'; // Adjust the import path based on your project structure
+import {db}  from '@/prisma'; // Adjust the import path based on your project structure
 
 
 
 export async function GET() {
   try {
-    const beers = await prisma.beer.findMany({
+    const beers = await db.beer.findMany({
       orderBy: {
         isTested: 'desc', // Sort by isTested status, false (untested) first
       },
