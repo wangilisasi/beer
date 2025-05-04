@@ -4,7 +4,7 @@ import  type {Beer} from "@prisma/client";
 
 async function getBeers(): Promise<Beer[]> {
   // Fetch data from the API route
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/beers`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/beers`, {
     cache: 'no-store', // Ensure fresh data on each request
   });
 
