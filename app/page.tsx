@@ -1,21 +1,19 @@
 import BeerList from '@/components/BeerList';
 ; // Keep type import
 import  type {Beer} from "@prisma/client";
+import { db } from "@/prisma";
 
 async function getBeers(): Promise<Beer[]> {
-  // Fetch data from the API route
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/beers`, {
-    cache: 'no-store', // Ensure fresh data on each request
+  // Fetch data directly from the database
+  const beers = await db.beer.findMany({
+    orderBy: {
+      isTested: 'desc', // Optional: Order beers alphabetically by name
+    },
   });
-
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error('Failed to fetch data');
-  }
-
-  return res.json();
+  return beers;
 }
-
+ 
+  
 export default async function Home() {
   const beers = await getBeers(); // Fetch beers from the API route
 
