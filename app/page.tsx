@@ -2,8 +2,6 @@ import BeerList from '@/components/BeerList';
 import type { Beer } from "@prisma/client";
 import { db } from "@/prisma";
 
-export const dynamic = 'force-dynamic'; // Add this line to force dynamic rendering
-
 //fetch data directly from page
 async function getBeers(): Promise<Beer[]> {
   // Fetch data directly from the database

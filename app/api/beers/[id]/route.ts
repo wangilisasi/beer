@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/prisma'; // Adjust the import path based on your project structure
+import { revalidatePath } from 'next/cache'; // Import revalidatePath
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -14,6 +15,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       where: { id },
       data: { isTested },
     });
+
+    revalidatePath('/'); // Revalidate the home page cache
+
     return NextResponse.json(updatedBeer);
   } catch (error) {
     console.error(`Failed to update beer ${id}:`, error);
