@@ -12,16 +12,50 @@ interface BeerListProps {
 export default function BeerList({ initialBeers }: BeerListProps) {
   const [beers, setBeers] = useState<Beer[]>(initialBeers);
 
-  // TODO: Implement update logic for the database when toggling
-  const toggleBeerTested = (beerId: string) => { // ID is now string (ObjectId)
-    setBeers(prev => prev.map(beer => 
-      beer.id === beerId 
-        ? { ...beer, isTested: !beer.isTested }
+  const toggleBeerTested = async (beerId: string) => {
+    // Find the current state of the beer to determine the new state
+    const beerToToggle = beers.find(beer => beer.id === beerId);
+    if (!beerToToggle) return; // Should not happen, but good practice
+
+    const newIsTested = !beerToToggle.isTested;
+
+    // Optimistically update the UI
+    setBeers(prev => prev.map(beer =>
+      beer.id === beerId
+        ? { ...beer, isTested: newIsTested }
         : beer
     ));
-    // Note: This only updates the state in the browser. 
-    // You'll need to add a server action or API route 
-    // to persist this change to the database.
+
+    // Persist the change to the database
+    try {
+      const response = await fetch(`/api/beers/${beerId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isTested: newIsTested }),
+      });
+
+      if (!response.ok) {
+        // Revert the state if the API call fails
+        console.error('Failed to update beer status:', await response.text());
+        setBeers(prev => prev.map(beer =>
+          beer.id === beerId
+            ? { ...beer, isTested: !newIsTested } // Revert to original state
+            : beer
+        ));
+        // Optionally: Show an error message to the user
+      }
+    } catch (error) {
+      console.error('Error updating beer status:', error);
+      // Revert the state on network error etc.
+      setBeers(prev => prev.map(beer =>
+        beer.id === beerId
+          ? { ...beer, isTested: !newIsTested } // Revert to original state
+          : beer
+      ));
+      // Optionally: Show an error message to the user
+    }
   };
 
   const testedCount = beers.filter(beer => beer.isTested).length;

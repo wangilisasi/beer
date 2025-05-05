@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import {db}  from '@/prisma'; // Adjust the import path based on your project structure
 
-
-
 export async function GET() {
   try {
     const beers = await db.beer.findMany({
