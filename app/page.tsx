@@ -3,6 +3,7 @@ import BeerList from '@/components/BeerList';
 import  type {Beer} from "@prisma/client";
 import { db } from "@/prisma";
 
+//fetch data directly from page
 async function getBeers(): Promise<Beer[]> {
   // Fetch data directly from the database
   const beers = await db.beer.findMany({
