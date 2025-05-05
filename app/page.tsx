@@ -1,7 +1,8 @@
 import BeerList from '@/components/BeerList';
-; // Keep type import
-import  type {Beer} from "@prisma/client";
+import type { Beer } from "@prisma/client";
 import { db } from "@/prisma";
+
+export const dynamic = 'force-dynamic'; // Add this line to force dynamic rendering
 
 //fetch data directly from page
 async function getBeers(): Promise<Beer[]> {
@@ -14,7 +15,6 @@ async function getBeers(): Promise<Beer[]> {
   return beers;
 }
  
-  
 export default async function Home() {
   const beers = await getBeers(); // Fetch beers from the API route
 
