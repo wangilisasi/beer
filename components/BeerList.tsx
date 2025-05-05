@@ -26,7 +26,7 @@ export default function BeerList({ initialBeers }: BeerListProps) {
         : beer
     ));
 
-    // Persist the change to the database
+    // Persist the change to the database after updating the UI
     try {
       const response = await fetch(`/api/beers/${beerId}`, {
         method: 'PATCH',
