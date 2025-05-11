@@ -12,6 +12,13 @@ interface BeerListProps {
 export default function BeerList({ initialBeers }: BeerListProps) {
   const [beers, setBeers] = useState<Beer[]>(initialBeers);
   const router = useRouter(); // Initialize the router
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newBeer, setNewBeer] = useState({
+    name: '',
+    type: '',
+    region: '',
+    alcoholContent: '',
+  });
 
   const toggleBeerTested = async (beerId: string) => {
     // Find the current state of the beer to determine the new state
@@ -64,6 +71,53 @@ export default function BeerList({ initialBeers }: BeerListProps) {
     router.refresh(); // Refresh the page to reflect the changes
   };
 
+  const handleAddBeer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      const response = await fetch('/api/beers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newBeer),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add beer');
+      }
+
+      const addedBeer = await response.json();
+      setBeers(prev => [...prev, addedBeer]);
+      setNewBeer({ name: '', type: '', region: '', alcoholContent: '' });
+      setShowAddForm(false);
+      router.refresh();
+    } catch (error) {
+      console.error('Error adding beer:', error);
+      // Optionally: Show an error message to the user
+    }
+  };
+
+  const handleDeleteBeer = async (beerId: string) => {
+    if (!confirm('Are you sure you want to delete this beer?')) return;
+
+    try {
+      const response = await fetch(`/api/beers/${beerId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete beer');
+      }
+
+      setBeers(prev => prev.filter(beer => beer.id !== beerId));
+      router.refresh();
+    } catch (error) {
+      console.error('Error deleting beer:', error);
+      // Optionally: Show an error message to the user
+    }
+  };
+
   const testedCount = beers.filter(beer => beer.isTested).length;
   const progressPercentage = beers.length > 0 ? (testedCount / beers.length) * 100 : 0;
 
@@ -79,6 +133,67 @@ export default function BeerList({ initialBeers }: BeerListProps) {
       <p className="text-[#8B4513] mb-8">
         {testedCount} of {beers.length} beers tasted ({Math.round(progressPercentage)}%)
       </p>
+
+      {/* Add Beer Button */}
+      <button
+        onClick={() => setShowAddForm(!showAddForm)}
+        className="mb-6 px-4 py-2 bg-[#daa520] text-white rounded-lg hover:bg-[#c99510] transition-colors"
+      >
+        {showAddForm ? 'Cancel' : 'Add New Beer'}
+      </button>
+
+      {/* Add Beer Form */}
+      {showAddForm && (
+        <form onSubmit={handleAddBeer} className="mb-8 space-y-4 p-6 bg-[#f8f8f8] rounded-lg border border-[#daa520]/20">
+          <div>
+            <input
+              type="text"
+              placeholder="Beer Name"
+              value={newBeer.name}
+              onChange={(e) => setNewBeer(prev => ({ ...prev, name: e.target.value }))}
+              className="w-full p-2 border border-[#daa520]/20 rounded-md"
+              required
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Beer Type"
+              value={newBeer.type}
+              onChange={(e) => setNewBeer(prev => ({ ...prev, type: e.target.value }))}
+              className="w-full p-2 border border-[#daa520]/20 rounded-md"
+              required
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Region"
+              value={newBeer.region}
+              onChange={(e) => setNewBeer(prev => ({ ...prev, region: e.target.value }))}
+              className="w-full p-2 border border-[#daa520]/20 rounded-md"
+              required
+            />
+          </div>
+          <div>
+            <input
+              type="number"
+              step="0.1"
+              placeholder="Alcohol Content (%)"
+              value={newBeer.alcoholContent}
+              onChange={(e) => setNewBeer(prev => ({ ...prev, alcoholContent: e.target.value }))}
+              className="w-full p-2 border border-[#daa520]/20 rounded-md"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full py-2 bg-[#daa520] text-white rounded-lg hover:bg-[#c99510] transition-colors"
+          >
+            Add Beer
+          </button>
+        </form>
+      )}
 
       {/* Beer List */}
       <div className="space-y-4">
@@ -100,7 +215,7 @@ export default function BeerList({ initialBeers }: BeerListProps) {
                     ? 'bg-[#daa520] border-[#daa520] text-white' 
                     : 'border-[#8B4513]/30 hover:border-[#daa520]'}
                 `}
-                onClick={() => toggleBeerTested(beer.id)} // Use string ID
+                onClick={() => toggleBeerTested(beer.id)}
               >
                 {beer.isTested && (
                   <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -112,7 +227,17 @@ export default function BeerList({ initialBeers }: BeerListProps) {
                 )}
               </div>
               <div className="flex-1">
-                <h2 className="text-xl font-roboto font-semibold text-[#a86823]">{beer.name}</h2>
+                <div className="flex justify-between items-start">
+                  <h2 className="text-xl font-roboto font-semibold text-[#a86823]">{beer.name}</h2>
+                  <button
+                    onClick={() => handleDeleteBeer(beer.id)}
+                    className="text-red-500 hover:text-red-700 p-1"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
                 <div className="flex flex-wrap gap-2 mt-2">
                   <span className="text-sm px-2.5 py-1 rounded-md bg-[#f8f8f8] text-[#8B4513] border border-[#daa520]/20">
                     {beer.type}

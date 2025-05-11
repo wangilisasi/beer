@@ -28,3 +28,22 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return NextResponse.json({ error: 'Failed to update beer' }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+
+  try {
+    await db.beer.delete({
+      where: { id },
+    });
+
+    revalidatePath('/');
+    return NextResponse.json({ message: 'Beer deleted successfully' });
+  } catch (error) {
+    console.error(`Failed to delete beer ${id}:`, error);
+    if (error instanceof Error && 'code' in error && error.code === 'P2025') {
+      return NextResponse.json({ error: 'Beer not found' }, { status: 404 });
+    }
+    return NextResponse.json({ error: 'Failed to delete beer' }, { status: 500 });
+  }
+}
