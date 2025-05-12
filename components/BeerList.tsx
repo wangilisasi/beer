@@ -23,6 +23,7 @@ export default function BeerList({ initialBeers }: BeerListProps) {
   const [beers, setBeers] = useState<Beer[]>(initialBeers);
   const router = useRouter(); // Initialize the router
   const [showAddForm, setShowAddForm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [newBeer, setNewBeer] = useState({
     name: '',
     type: '',
@@ -109,6 +110,7 @@ export default function BeerList({ initialBeers }: BeerListProps) {
   };
 
   const handleDeleteBeer = async (beerId: string) => {
+    setIsDeleting(true);
     try {
       const response = await fetch(`/api/beers/${beerId}`, {
         method: 'DELETE',
@@ -123,6 +125,8 @@ export default function BeerList({ initialBeers }: BeerListProps) {
     } catch (error) {
       console.error('Error deleting beer:', error);
       // Optionally: Show an error message to the user
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -256,8 +260,45 @@ export default function BeerList({ initialBeers }: BeerListProps) {
                         </DialogDescription>
                       </DialogHeader>
                       <DialogFooter>
-                        <Button variant="outline" onClick={() => handleDeleteBeer(beer.id)}>
-                          Delete
+                        <Button 
+                          variant="outline" 
+                          onClick={() => {}} // Dialog will close automatically
+                          disabled={isDeleting}
+                        >
+                          Cancel
+                        </Button>
+                        <Button 
+                          variant="destructive" 
+                          onClick={() => handleDeleteBeer(beer.id)}
+                          disabled={isDeleting}
+                        >
+                          {isDeleting ? (
+                            <>
+                              <svg
+                                className="mr-2 h-4 w-4 animate-spin"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                />
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                />
+                              </svg>
+                              Deleting...
+                            </>
+                          ) : (
+                            'Delete'
+                          )}
                         </Button>
                       </DialogFooter>
                     </DialogContent>
