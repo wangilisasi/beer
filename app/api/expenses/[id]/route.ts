@@ -3,12 +3,18 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   try {
-    const { id } = params;
+    // Get the id from the URL
+    const { pathname } = request.nextUrl;
+    const id = pathname.split('/').pop();
+
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Expense ID is required' },
+        { status: 400 }
+      );
+    }
 
     // Delete the expense
     await prisma.expense.delete({
