@@ -1,5 +1,5 @@
 import BeerList from '@/components/BeerList';
-import type { Beer } from "@prisma/client";
+import type { Beer } from "../src/generated/prisma";
 import { db } from "@/prisma";
 import Link from 'next/link';
 
