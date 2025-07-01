@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // generate code in custom folder, not `node_modules`
+  output   = "../src/generated/prisma" // optional
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Beer {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  type           String
+  region         String
+  alcoholContent Float
+  isTested       Boolean
+}
+
+model ExpenseTracker {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  totalMoney Float
+  endDate    String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  expenses   Expense[]
+}
+
+model Expense {
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  amount         Float
+  description    String
+  date           String
+  createdAt      DateTime       @default(now())
+  expenseTracker ExpenseTracker @relation(fields: [trackerId], references: [id], onDelete: Cascade)
+  trackerId      String         @db.ObjectId
+}
