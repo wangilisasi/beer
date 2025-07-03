@@ -206,7 +206,7 @@ export default function TrackerPage() {
         {/* Add Expense Form */}
         <div className="bg-white rounded-lg shadow p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">Add Today&apos;s Expense</h2>
-          <form onSubmit={handleAddExpense} className="flex gap-4">
+          <form onSubmit={handleAddExpense} className="flex flex-col md:flex-row gap-4">
             <input
               type="number"
               value={newExpense.amount}
