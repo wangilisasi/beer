@@ -190,15 +190,15 @@ export default function TrackerPage() {
         
         {/* Period Info Card */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-          <div className="grid grid-cols-3 gap-8">
-            <div className="text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8">
+            <div className="text-center border-b sm:border-b-0 pb-4 sm:pb-0">
               <div className="flex items-center justify-center mb-2">
                 <span className="text-green-500 mr-2">📅</span>
                 <span className="text-gray-600 font-medium">Start Date</span>
               </div>
               <p className="text-lg font-bold text-gray-900">7/4/2025</p>
             </div>
-            <div className="text-center">
+            <div className="text-center border-b sm:border-b-0 pb-4 sm:pb-0">
               <div className="flex items-center justify-center mb-2">
                 <span className="text-red-500 mr-2">📅</span>
                 <span className="text-gray-600 font-medium">End Date</span>
