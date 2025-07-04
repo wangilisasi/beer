@@ -222,21 +222,21 @@ export default function TrackerPage() {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-lg shadow p-4 flex flex-col items-center justify-center">
+          <div className="bg-white rounded-lg shadow p-4 ">
             <h3 className="text-sm font-medium text-gray-600">Total Budget</h3>
             <p className="text-2xl font-bold text-green-600">{formatCurrency(totalMoney)}</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 flex flex-col items-center justify-center">
+          <div className="bg-white rounded-lg shadow p-4 ">
             <h3 className="text-sm font-medium text-gray-600">Total Spent</h3>
             <p className="text-2xl font-bold text-red-600">{formatCurrency(totalSpent)}</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 flex flex-col items-center justify-center">
+          <div className="bg-white rounded-lg shadow p-4 ">
             <h3 className="text-sm font-medium text-gray-600">Remaining</h3>
             <p className={`text-2xl font-bold ${remainingMoney >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
               {formatCurrency(remainingMoney)}
             </p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 flex flex-col items-center justify-center">
+          <div className="bg-white rounded-lg shadow p-4 ">
             <h3 className="text-sm font-medium text-gray-600">Daily Target</h3>
             <p className={`text-2xl font-bold ${dailyTarget >= 0 ? 'text-green-600' : 'text-red-600'}`}>
               {formatCurrency(dailyTarget)}
