@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 interface ExpenseEntry {
   id: string;
@@ -15,6 +17,8 @@ export default function TrackerPage() {
   const [newExpense, setNewExpense] = useState({ amount: '', description: '' });
   const [endDate] = useState('2025-08-31');
   const [loading, setLoading] = useState(true);
+  const [budgetModalOpen, setBudgetModalOpen] = useState(false);
+  const [budgetInput, setBudgetInput] = useState<string>('');
   
   // Calculate remaining days
   const calculateRemainingDays = () => {
@@ -162,40 +166,78 @@ export default function TrackerPage() {
 
         {/* Total Money Input */}
         <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Set Total Budget</h2>
-          <div className="flex gap-4">
-            <input
-              type="number"
-              value={totalMoney || ''}
-              onChange={(e) => {
-                const newValue = parseFloat(e.target.value) || 0;
-                setTotalMoney(newValue);
-                handleUpdateBudget(newValue);
-              }}
-              placeholder="Enter total money available"
-              className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              step="0.01"
-            />
-          </div>
+        
+          <Dialog open={budgetModalOpen} onOpenChange={setBudgetModalOpen}>
+            <DialogTrigger asChild>
+              <button
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                onClick={() => setBudgetInput(totalMoney.toString())}
+              >
+                Set Total Budget
+              </button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Set Total Budget</DialogTitle>
+              </DialogHeader>
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  const value = parseFloat(budgetInput);
+                  if (!isNaN(value)) {
+                    await handleUpdateBudget(value);
+                    setBudgetModalOpen(false);
+                  }
+                }}
+                className="flex flex-col gap-4"
+              >
+                <input
+                  type="number"
+                  value={budgetInput}
+                  onChange={e => setBudgetInput(e.target.value)}
+                  placeholder="Enter total money available"
+                  className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  step="0.01"
+                  required
+                />
+                <DialogFooter>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Save
+                  </button>
+                  <DialogClose asChild>
+                    <button
+                      type="button"
+                      className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </DialogClose>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-lg shadow p-4">
+          <div className="bg-white rounded-lg shadow p-4 flex flex-col items-center justify-center">
             <h3 className="text-sm font-medium text-gray-600">Total Budget</h3>
             <p className="text-2xl font-bold text-green-600">{formatCurrency(totalMoney)}</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4">
+          <div className="bg-white rounded-lg shadow p-4 flex flex-col items-center justify-center">
             <h3 className="text-sm font-medium text-gray-600">Total Spent</h3>
             <p className="text-2xl font-bold text-red-600">{formatCurrency(totalSpent)}</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4">
+          <div className="bg-white rounded-lg shadow p-4 flex flex-col items-center justify-center">
             <h3 className="text-sm font-medium text-gray-600">Remaining</h3>
             <p className={`text-2xl font-bold ${remainingMoney >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
               {formatCurrency(remainingMoney)}
             </p>
           </div>
-          <div className="bg-white rounded-lg shadow p-4">
+          <div className="bg-white rounded-lg shadow p-4 flex flex-col items-center justify-center">
             <h3 className="text-sm font-medium text-gray-600">Daily Target</h3>
             <p className={`text-2xl font-bold ${dailyTarget >= 0 ? 'text-green-600' : 'text-red-600'}`}>
               {formatCurrency(dailyTarget)}
