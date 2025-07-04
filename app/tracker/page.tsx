@@ -38,6 +38,9 @@ export default function TrackerPage() {
   const remainingDays = calculateRemainingDays();
   const dailyTarget = remainingDays > 0 ? remainingMoney / remainingDays : 0;
 
+  // Calculate budget percentage
+  const budgetPercentage = totalMoney > 0 ? (totalSpent / totalMoney) * 100 : 0;
+
   // Load data from database on component mount
   useEffect(() => {
     fetchTrackerData();
@@ -125,54 +128,71 @@ export default function TrackerPage() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'EUR',
-    }).format(amount);
+    return `€${amount.toFixed(2)}`;
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'numeric',
+      day: 'numeric',
+      year: 'numeric'
+    });
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
         <div className="text-xl">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Expense Tracker</h1>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
+      <div className="max-w-4xl mx-auto px-6">
         
-        {/* Period Info */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Period Information</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div>
-              <span className="text-gray-600">Start Date:</span>
-              <p className="font-medium">{new Date().toLocaleDateString()}</p>
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">🧠 Expense Tracker</h1>
+        </div>
+        
+        {/* Period Info Card */}
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <div className="grid grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="flex items-center justify-center mb-2">
+                <span className="text-green-500 mr-2">📅</span>
+                <span className="text-gray-600 font-medium">Start Date</span>
+              </div>
+              <p className="text-lg font-bold text-gray-900">7/4/2025</p>
             </div>
-            <div>
-              <span className="text-gray-600">End Date:</span>
-              <p className="font-medium">{new Date(endDate).toLocaleDateString()}</p>
+            <div className="text-center">
+              <div className="flex items-center justify-center mb-2">
+                <span className="text-red-500 mr-2">📅</span>
+                <span className="text-gray-600 font-medium">End Date</span>
+              </div>
+              <p className="text-lg font-bold text-gray-900">8/31/2025</p>
             </div>
-            <div>
-              <span className="text-gray-600">Days Remaining:</span>
-              <p className="font-medium">{remainingDays} days</p>
+            <div className="text-center">
+              <div className="flex items-center justify-center mb-2">
+                <span className="text-blue-500 mr-2">⏰</span>
+                <span className="text-gray-600 font-medium">Days Remaining</span>
+              </div>
+              <p className="text-lg font-bold text-gray-900">{remainingDays} days</p>
             </div>
           </div>
         </div>
 
-        {/* Total Money Input */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-        
+        {/* Set Budget Button */}
+        <div className="text-center mb-6">
           <Dialog open={budgetModalOpen} onOpenChange={setBudgetModalOpen}>
             <DialogTrigger asChild>
               <button
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="px-8 py-3 bg-slate-500 text-white rounded-xl hover:bg-slate-600 transition-colors font-medium shadow-md"
                 onClick={() => setBudgetInput(totalMoney.toString())}
               >
-                Set Total Budget
+                🎯 Set Total Budget
               </button>
             </DialogTrigger>
             <DialogContent>
@@ -202,7 +222,7 @@ export default function TrackerPage() {
                 <DialogFooter>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
                   >
                     Save
                   </button>
@@ -222,82 +242,148 @@ export default function TrackerPage() {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-lg shadow p-4 ">
-            <h3 className="text-sm font-medium text-gray-600">Total Budget</h3>
-            <p className="text-2xl font-bold text-green-600">{formatCurrency(totalMoney)}</p>
+          <div className="bg-gradient-to-br from-emerald-400 to-emerald-500 rounded-xl shadow-md p-4 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-medium opacity-90">Total Budget</h3>
+                <p className="text-2xl font-bold">{formatCurrency(totalMoney)} €</p>
+              </div>
+              <div className="text-3xl opacity-70">💰</div>
+            </div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 ">
-            <h3 className="text-sm font-medium text-gray-600">Total Spent</h3>
-            <p className="text-2xl font-bold text-red-600">{formatCurrency(totalSpent)}</p>
+          
+          <div className="bg-gradient-to-br from-rose-400 to-rose-500 rounded-xl shadow-md p-4 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-medium opacity-90">Total Spent</h3>
+                <p className="text-2xl font-bold">{formatCurrency(totalSpent)}</p>
+              </div>
+              <div className="text-3xl opacity-70">📉</div>
+            </div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 ">
-            <h3 className="text-sm font-medium text-gray-600">Remaining</h3>
-            <p className={`text-2xl font-bold ${remainingMoney >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
-              {formatCurrency(remainingMoney)}
-            </p>
+          
+          <div className="bg-gradient-to-br from-sky-400 to-sky-500 rounded-xl shadow-md p-4 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-medium opacity-90">Remaining</h3>
+                <p className="text-2xl font-bold">{formatCurrency(remainingMoney)}</p>
+              </div>
+              <div className="text-3xl opacity-70">📈</div>
+            </div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 ">
-            <h3 className="text-sm font-medium text-gray-600">Daily Target</h3>
-            <p className={`text-2xl font-bold ${dailyTarget >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {formatCurrency(dailyTarget)}
-            </p>
+          
+          <div className="bg-gradient-to-br from-violet-400 to-violet-500 rounded-xl shadow-md p-4 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-medium opacity-90">Daily Target</h3>
+                <p className="text-2xl font-bold">{formatCurrency(dailyTarget)}</p>
+              </div>
+              <div className="text-3xl opacity-70">🎯</div>
+            </div>
           </div>
+        </div>
+
+        {/* Budget Progress */}
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <div className="flex items-center mb-4">
+            <span className="text-2xl mr-2">📊</span>
+            <h2 className="text-xl font-bold text-gray-900">Budget Progress</h2>
+          </div>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-gray-700">Spent: {formatCurrency(totalSpent)}</span>
+            <span className="text-gray-600 font-medium">{budgetPercentage.toFixed(1)}% of budget</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+            <div 
+              className="bg-gradient-to-r from-slate-400 to-slate-500 h-2 rounded-full transition-all duration-500"
+              style={{ width: `${Math.min(budgetPercentage, 100)}%` }}
+            ></div>
+          </div>
+          <p className="text-center text-gray-600">
+            {budgetPercentage < 50 ? "Great! You're on track." : budgetPercentage < 80 ? "You're doing well, keep monitoring." : "Consider reducing expenses."}
+          </p>
         </div>
 
         {/* Add Expense Form */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Add Today&apos;s Expense</h2>
-          <form onSubmit={handleAddExpense} className="flex flex-col md:flex-row gap-4">
-            <input
-              type="number"
-              value={newExpense.amount}
-              onChange={(e) => setNewExpense(prev => ({ ...prev, amount: e.target.value }))}
-              placeholder="Amount"
-              className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              step="0.01"
-              required
-            />
-            <input
-              type="text"
-              value={newExpense.description}
-              onChange={(e) => setNewExpense(prev => ({ ...prev, description: e.target.value }))}
-              placeholder="Description"
-              className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            />
-            <button
-              type="submit"
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Add
-            </button>
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <div className="flex items-center mb-4">
+            <span className="text-2xl mr-2">➕</span>
+            <h2 className="text-xl font-bold text-gray-900">Add Today&apos;s Expense</h2>
+          </div>
+          <form onSubmit={handleAddExpense} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Amount (€)</label>
+              <input
+                type="number"
+                value={newExpense.amount}
+                onChange={(e) => setNewExpense(prev => ({ ...prev, amount: e.target.value }))}
+                placeholder="0.00"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                step="0.01"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+              <input
+                type="text"
+                value={newExpense.description}
+                onChange={(e) => setNewExpense(prev => ({ ...prev, description: e.target.value }))}
+                placeholder="What did you buy?"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
+            </div>
+            <div className="flex items-end">
+              <button
+                type="submit"
+                disabled={!newExpense.amount || !newExpense.description}
+                className={`w-full px-6 py-3 rounded-lg transition-colors font-medium ${
+                  newExpense.amount && newExpense.description
+                    ? 'bg-slate-500 text-white hover:bg-slate-600'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                ➕ Add Expense
+              </button>
+            </div>
           </form>
         </div>
 
-        {/* Expenses List */}
-        <div className="bg-white rounded-lg shadow">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-xl font-semibold">Expense History</h2>
+        {/* Expense History */}
+        <div className="bg-white rounded-xl shadow-sm">
+          <div className="p-6 border-b border-gray-100">
+            <div className="flex items-center">
+              <span className="text-2xl mr-2">📋</span>
+              <h2 className="text-xl font-bold text-gray-900">Expense History</h2>
+            </div>
           </div>
-          <div className="divide-y divide-gray-200">
+          <div className="divide-y divide-gray-100">
             {expenses.length === 0 ? (
-              <div className="p-6 text-center text-gray-500">
-                No expenses recorded yet. Add your first expense above!
+              <div className="p-8 text-center text-gray-500">
+                <div className="text-6xl mb-4">💭</div>
+                <p className="text-lg">No expenses recorded yet.</p>
+                <p className="text-sm">Add your first expense above!</p>
               </div>
             ) : (
               expenses.map((expense) => (
-                <div key={expense.id} className="p-6 flex justify-between items-center">
-                  <div>
-                    <p className="font-medium">{expense.description}</p>
-                    <p className="text-sm text-gray-600">{expense.date}</p>
+                <div key={expense.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center">
+                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                      <span className="text-blue-600">€</span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">{expense.description}</p>
+                      <p className="text-sm text-gray-500">{formatDate(expense.date)}</p>
+                    </div>
                   </div>
                   <div className="flex items-center gap-4">
-                    <span className="text-lg font-semibold text-red-600">
+                    <span className="text-lg font-bold text-red-600">
                       {formatCurrency(expense.amount)}
                     </span>
                     <button
                       onClick={() => handleDeleteExpense(expense.id)}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-red-500 hover:text-red-700 transition-colors p-1"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
