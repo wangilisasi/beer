@@ -19,6 +19,7 @@ export default function TrackerPage() {
   const [addingExpense, setAddingExpense] = useState(false);
   const [budgetModalOpen, setBudgetModalOpen] = useState(false);
   const [budgetInput, setBudgetInput] = useState<string>('');
+  const [showAllExpenses, setShowAllExpenses] = useState(false);
   
   // Calculate remaining days
   const calculateRemainingDays = () => {
@@ -55,6 +56,18 @@ export default function TrackerPage() {
   const budgetPercentage = totalMoney > 0 ? (totalSpent / totalMoney) * 100 : 0;
   const recentDailySpend = calculateRecentDailyExpenditure();
   const isOnTrack = recentDailySpend <= dailyTarget;
+
+  const getRecentExpenses = () => {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    
+    return expenses.filter(expense => 
+      new Date(expense.date) >= sevenDaysAgo
+    );
+  };
+
+  const displayedExpenses = showAllExpenses ? expenses : getRecentExpenses();
+  const hiddenExpensesCount = expenses.length - displayedExpenses.length;
 
   // Load data from database on component mount
   useEffect(() => {
@@ -381,45 +394,74 @@ export default function TrackerPage() {
         {/* Expense History */}
         <div className="bg-white rounded-xl shadow-sm">
           <div className="p-6 border-b border-gray-100">
-            <div className="flex items-center">
-              <span className="text-2xl mr-2">📋</span>
-              <h2 className="text-xl font-bold text-gray-900">Expense History</h2>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <span className="text-2xl mr-2">📋</span>
+                <h2 className="text-xl font-bold text-gray-900">Expense History</h2>
+              </div>
+              {!showAllExpenses && hiddenExpensesCount > 0 && (
+                <span className="text-sm text-gray-500">
+                  Showing last 7 days • {hiddenExpensesCount} more {hiddenExpensesCount === 1 ? 'expense' : 'expenses'}
+                </span>
+              )}
             </div>
           </div>
           <div className="divide-y divide-gray-100">
-            {expenses.length === 0 ? (
+            {displayedExpenses.length === 0 ? (
               <div className="p-8 text-center text-gray-500">
                 <div className="text-6xl mb-4">💭</div>
                 <p className="text-lg">No expenses recorded yet.</p>
                 <p className="text-sm">Add your first expense above!</p>
               </div>
             ) : (
-              expenses.map((expense) => (
-                <div key={expense.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                      <span className="text-blue-600">€</span>
+              <>
+                {displayedExpenses.map((expense) => (
+                  <div key={expense.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
+                        <span className="text-blue-600">€</span>
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900">{expense.description}</p>
+                        <p className="text-sm text-gray-500">{formatDate(expense.date)}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium text-gray-900">{expense.description}</p>
-                      <p className="text-sm text-gray-500">{formatDate(expense.date)}</p>
+                    <div className="flex items-center gap-4">
+                      <span className="text-lg font-bold text-red-600">
+                        {formatCurrency(expense.amount)}
+                      </span>
+                      <button
+                        onClick={() => handleDeleteExpense(expense.id)}
+                        className="text-red-500 hover:text-red-700 transition-colors p-1"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-lg font-bold text-red-600">
-                      {formatCurrency(expense.amount)}
-                    </span>
+                ))}
+                {hiddenExpensesCount > 0 && !showAllExpenses && (
+                  <div className="p-4 text-center">
                     <button
-                      onClick={() => handleDeleteExpense(expense.id)}
-                      className="text-red-500 hover:text-red-700 transition-colors p-1"
+                      onClick={() => setShowAllExpenses(true)}
+                      className="text-slate-600 hover:text-slate-800 font-medium transition-colors"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
+                      Show All Expenses ({expenses.length} total)
                     </button>
                   </div>
-                </div>
-              ))
+                )}
+                {showAllExpenses && (
+                  <div className="p-4 text-center">
+                    <button
+                      onClick={() => setShowAllExpenses(false)}
+                      className="text-slate-600 hover:text-slate-800 font-medium transition-colors"
+                    >
+                      Show Recent Expenses Only
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
