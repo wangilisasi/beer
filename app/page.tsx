@@ -30,19 +30,19 @@ export default async function TrackerPage() {
       <div className="max-w-4xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">🧠 Expense Tracker</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Expense Tracker</h1>
         </div>
 
         {/* Period Info Card */}
         <Card className="mb-6">
-          <CardContent className="p-6">
+          <CardContent className="px-4 py-2">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8">
               <div className="text-center border-b sm:border-b-0 pb-4 sm:pb-0">
                 <div className="flex items-center justify-center mb-2">
                   <span className="text-green-500 mr-2">📅</span>
                   <span className="text-gray-600 font-medium">Start Date</span>
                 </div>
-                <p className="text-lg font-bold text-gray-900">7/4/2025</p>
+                <p className="text-lg font-bold text-gray-900">2025-07-04</p>
               </div>
               <div className="text-center border-b sm:border-b-0 pb-4 sm:pb-0">
                 <div className="flex items-center justify-center mb-2">
