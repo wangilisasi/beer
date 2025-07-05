@@ -54,11 +54,6 @@ export default function ExpenseHistory({ expenses }: ExpenseHistoryProps) {
             <span className="text-2xl mr-2">📋</span>
             <CardTitle className="text-xl">Expense History</CardTitle>
           </div>
-          {!showAllExpenses && hiddenExpensesCount > 0 && (
-            <div className="text-sm text-gray-500">
-              Showing last 5 expenses • {hiddenExpensesCount} more {hiddenExpensesCount === 1 ? "expense" : "expenses"}
-            </div>
-          )}
         </div>
       </CardHeader>
       <CardContent className="p-0">
