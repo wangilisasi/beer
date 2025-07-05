@@ -26,9 +26,13 @@ export default function ExpenseHistory({ expenses }: ExpenseHistoryProps) {
   };
 
   const getRecentExpenses = () => {
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    return expenses.filter((expense) => new Date(expense.date) >= sevenDaysAgo);
+    // const sevenDaysAgo = new Date();
+    // sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    // return expenses.filter((expense) => new Date(expense.date) >= sevenDaysAgo);
+
+    const fiveLastExpenses = expenses.slice(0, 5);
+    return fiveLastExpenses;
+
   };
 
   const displayedExpenses = showAllExpenses ? expenses : getRecentExpenses();
