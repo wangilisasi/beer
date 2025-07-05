@@ -36,7 +36,7 @@ export default async function TrackerPage() {
         {/* Period Info Card */}
         <Card className="mb-6">
           <CardContent className="px-4 py-2">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-8">
               <div className="text-center border-b sm:border-b-0 pb-4 sm:pb-0">
                 <div className="flex items-center justify-center mb-2">
                   <span className="text-green-500 mr-2">📅</span>
