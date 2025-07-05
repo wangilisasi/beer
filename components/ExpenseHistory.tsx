@@ -51,7 +51,6 @@ export default function ExpenseHistory({ expenses }: ExpenseHistoryProps) {
       <CardHeader className="border-b border-gray-100">
         <div className="flex flex-col md:flex-row items-center justify-between">
           <div className="flex items-center">
-            <span className="text-2xl mr-2">📋</span>
             <CardTitle className="text-xl">Expense History</CardTitle>
           </div>
         </div>
