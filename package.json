@@ -10,6 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.10.0",
     "@radix-ui/react-dialog": "^1.1.13",
     "@radix-ui/react-slot": "^1.2.2",
     "class-variance-authority": "^0.7.1",
@@ -24,14 +25,14 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@prisma/client": "^6.6.0",
+    "@prisma/client": "^6.11.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
-    "prisma": "^6.6.0",
+    "prisma": "^6.11.1",
     "tailwindcss": "^4",
     "tsx": "^4.19.4",
     "tw-animate-css": "^1.2.8",
