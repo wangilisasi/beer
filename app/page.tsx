@@ -23,6 +23,8 @@ export default async function TrackerPage() {
     recentDailySpend,
     isOnTrack,
     budgetPercentage,
+    todaySpend,
+    yesterdaySpend,
   } = await getTrackerStats();
 
   return (
@@ -127,9 +129,9 @@ export default async function TrackerPage() {
               <p className={`font-medium ${isOnTrack ? "text-emerald-600" : "text-rose-600"}`}>{
                 isOnTrack
                   ? "You're on track! Your recent daily spending is within target."
-                  : `Warning: Your recent daily spending (${formatCurrency(recentDailySpend)}) exceeds your target (${formatCurrency(dailyTarget)})`
+                  : `Warning: Your avg 2 day spending (${formatCurrency(recentDailySpend)}) exceeds your target)`
               }</p>
-              <p className="text-sm text-gray-600 mt-1">Based on your spending in the last 2 days</p>
+              <p className="text-sm text-gray-600 mt-1">Yesterday: <span className={`font-bold ${yesterdaySpend <= dailyTarget ? 'text-green-600' : 'text-rose-600'}`}>{formatCurrency(yesterdaySpend)}</span> Today: <span className={`font-bold ${todaySpend <= dailyTarget ? 'text-green-600' : 'text-rose-600'}`}>{formatCurrency(todaySpend)}</span></p>
             </div>
           </CardContent>
         </Card>
