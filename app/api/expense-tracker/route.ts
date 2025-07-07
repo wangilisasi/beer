@@ -1,12 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { auth } from '@/auth';
 
 const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    // Get the first (and only) expense tracker
+    const session = await auth();
+    
+    if (!session || !session.user?.id) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    // Get expense tracker for the authenticated user
     const tracker = await prisma.expenseTracker.findFirst({
+      where: {
+        userId: session.user.id
+      },
       include: {
         expenses: {
           orderBy: {
@@ -38,11 +51,24 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth();
+    
+    if (!session || !session.user?.id) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { totalMoney, endDate } = body;
 
-    // Check if tracker already exists
-    const existingTracker = await prisma.expenseTracker.findFirst();
+    // Check if tracker already exists for this user
+    const existingTracker = await prisma.expenseTracker.findFirst({
+      where: {
+        userId: session.user.id
+      }
+    });
     
     if (existingTracker) {
       // Update existing tracker
@@ -64,11 +90,12 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json(updatedTracker);
     } else {
-      // Create new tracker
+      // Create new tracker for this user
       const newTracker = await prisma.expenseTracker.create({
         data: {
           totalMoney: parseFloat(totalMoney),
           endDate,
+          userId: session.user.id
         },
         include: {
           expenses: {

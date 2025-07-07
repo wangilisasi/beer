@@ -1,15 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { auth } from '@/auth';
 
 const prisma = new PrismaClient();
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await auth();
+    
+    if (!session || !session.user?.id) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { amount, description, date } = body;
 
-    // Get the tracker (we'll use the first one)
-    const tracker = await prisma.expenseTracker.findFirst();
+    // Get the tracker for the authenticated user
+    const tracker = await prisma.expenseTracker.findFirst({
+      where: {
+        userId: session.user.id
+      }
+    });
     
     if (!tracker) {
       return NextResponse.json(

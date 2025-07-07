@@ -58,8 +58,11 @@ function computeStats(totalMoney: number, endDate: string, expenses: ExpenseEntr
   };
 }
 
-export async function getTrackerStats(): Promise<TrackerStats> {
+export async function getTrackerStats(userId: string): Promise<TrackerStats> {
   const tracker = await db.expenseTracker.findFirst({
+    where: {
+      userId: userId
+    },
     include: {
       expenses: {
         orderBy: {

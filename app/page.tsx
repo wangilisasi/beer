@@ -18,7 +18,7 @@ export default async function TrackerPage() {
   const session = await auth();
 
   // Redirect to login if not authenticated
-  if (!session) {
+  if (!session || !session.user?.id) {
     redirect("/login");
   }
 
@@ -35,7 +35,7 @@ export default async function TrackerPage() {
     budgetPercentage,
     todaySpend,
     yesterdaySpend,
-  } = await getTrackerStats();
+  } = await getTrackerStats(session.user.id);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
