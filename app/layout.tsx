@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto, Pacifico } from "next/font/google";
 import "./globals.css";
-
-
+import Navbar from "@/components/Navbar";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -24,14 +23,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body
-        className={` ${roboto.variable} ${pacifico.variable} antialiased`}
-      >
+      <body className={`${roboto.variable} ${pacifico.variable} antialiased`}>
+        <Navbar />
         {children}
       </body>
     </html>

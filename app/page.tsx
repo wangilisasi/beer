@@ -6,12 +6,21 @@ import BudgetDialog from "@/components/BudgetDialog";
 import AddExpenseForm from "@/components/AddExpenseForm";
 import ExpenseHistory from "@/components/ExpenseHistory";
 import { getTrackerStats } from "@/lib/expenseTracker";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 function formatCurrency(amount: number) {
   return `€${amount.toFixed(2)}`;
 }
 
 export default async function TrackerPage() {
+  const session = await auth();
+
+  // Redirect to login if not authenticated
+  if (!session) {
+    redirect("/login");
+  }
+
   const {
     totalMoney,
     endDate,
@@ -30,11 +39,6 @@ export default async function TrackerPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
       <div className="max-w-4xl mx-auto px-6">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Expense Tracker</h1>
-        </div>
-
         {/* Period Info Card */}
         <Card className="mb-6">
           <CardContent className="px-4 py-2">

@@ -6,58 +6,46 @@ async function migrateExpenseTrackers() {
   try {
     console.log('Starting migration of expense trackers...');
 
-    // Get all expense trackers that don't have a userId
-    const trackersWithoutUserId = await prisma.expenseTracker.findMany({
-      where: {
-        userId: null
-      }
-    });
+    // Get all expense trackers (we know they all have userId: null)
+    const allTrackers = await prisma.expenseTracker.findMany();
+    console.log(`Found ${allTrackers.length} expense trackers to migrate`);
 
-    console.log(`Found ${trackersWithoutUserId.length} expense trackers without userId`);
-
-    if (trackersWithoutUserId.length === 0) {
-      console.log('No migration needed - all expense trackers already have userId');
+    if (allTrackers.length === 0) {
+      console.log('No expense trackers found - nothing to migrate');
       return;
     }
 
-    // Option 1: Create a default user for existing data
+    // Create a default user for existing data
     const defaultUser = await prisma.user.upsert({
       where: {
-        email: 'default@example.com'
+        email: 'wangilisasi@gmail.com'
       },
       create: {
-        email: 'default@example.com',
-        name: 'Default User',
+        email: 'wangilisasi@gmail.com',
+        name: 'Emil Patrick',
       },
       update: {}
     });
 
     console.log(`Using default user: ${defaultUser.email} (${defaultUser.id})`);
 
-    // Update all expense trackers without userId to use the default user
+    // Update all expense trackers to use the default user
     const updateResult = await prisma.expenseTracker.updateMany({
-      where: {
-        userId: null
-      },
       data: {
         userId: defaultUser.id
       }
     });
 
-    console.log(`Updated ${updateResult.count} expense trackers with default userId`);
+    console.log(`✅ Updated ${updateResult.count} expense trackers with default userId`);
 
     // Verify the migration
-    const remainingTrackers = await prisma.expenseTracker.findMany({
+    const trackersWithUserId = await prisma.expenseTracker.findMany({
       where: {
-        userId: null
+        userId: defaultUser.id
       }
     });
 
-    if (remainingTrackers.length === 0) {
-      console.log('✅ Migration completed successfully!');
-    } else {
-      console.log(`⚠️  ${remainingTrackers.length} expense trackers still without userId`);
-    }
+    console.log(`✅ Migration completed successfully! ${trackersWithUserId.length} trackers now have userId`);
 
   } catch (error) {
     console.error('Migration failed:', error);
@@ -80,10 +68,8 @@ async function assignToExistingUser(userEmail: string) {
       throw new Error(`User with email ${userEmail} not found`);
     }
 
+    // Update all expense trackers to use this user
     const updateResult = await prisma.expenseTracker.updateMany({
-      where: {
-        userId: null
-      },
       data: {
         userId: user.id
       }
