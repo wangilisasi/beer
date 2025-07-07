@@ -15,33 +15,32 @@ async function migrateExpenseTrackers() {
       return;
     }
 
-    // Create a default user for existing data
-    const defaultUser = await prisma.user.upsert({
+    // Find the existing user by email
+    const existingUser = await prisma.user.findUnique({
       where: {
         email: 'wangilisasi@gmail.com'
-      },
-      create: {
-        email: 'wangilisasi@gmail.com',
-        name: 'Emil Patrick',
-      },
-      update: {}
-    });
-
-    console.log(`Using default user: ${defaultUser.email} (${defaultUser.id})`);
-
-    // Update all expense trackers to use the default user
-    const updateResult = await prisma.expenseTracker.updateMany({
-      data: {
-        userId: defaultUser.id
       }
     });
 
-    console.log(`✅ Updated ${updateResult.count} expense trackers with default userId`);
+    if (!existingUser) {
+      throw new Error('User with email wangilisasi@gmail.com not found. Please sign in first to create the user account.');
+    }
+
+    console.log(`Found existing user: ${existingUser.email} (${existingUser.id})`);
+
+    // Update all expense trackers to use the existing user
+    const updateResult = await prisma.expenseTracker.updateMany({
+      data: {
+        userId: existingUser.id
+      }
+    });
+
+    console.log(`✅ Updated ${updateResult.count} expense trackers with userId`);
 
     // Verify the migration
     const trackersWithUserId = await prisma.expenseTracker.findMany({
       where: {
-        userId: defaultUser.id
+        userId: existingUser.id
       }
     });
 
