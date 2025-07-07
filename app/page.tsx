@@ -6,6 +6,7 @@ import BudgetDialog from "@/components/BudgetDialog";
 import AddExpenseForm from "@/components/AddExpenseForm";
 import ExpenseHistory from "@/components/ExpenseHistory";
 import { getTrackerStats } from "@/lib/expenseTracker";
+import { Edit } from "lucide-react";
 
 function formatCurrency(amount: number) {
   return `€${amount.toFixed(2)}`;
@@ -64,14 +65,18 @@ export default async function TrackerPage() {
           </CardContent>
         </Card>
 
-        {/* Budget Dialog */}
-        <BudgetDialog totalMoney={totalMoney} endDate={endDate} />
-
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <Card>
-            <CardContent className="p-4">
-              <h3 className="text-sm font-medium text-gray-600">Total Budget</h3>
+            <CardContent className="p-4 relative">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-medium text-gray-600">Total Budget</h3>
+                <BudgetDialog totalMoney={totalMoney} endDate={endDate}>
+                  <button className="text-gray-400 hover:text-blue-600 transition-colors duration-200 p-1 rounded-full hover:bg-blue-50">
+                    <Edit size={16} />
+                  </button>
+                </BudgetDialog>
+              </div>
               <p className="text-2xl font-bold text-emerald-600">{formatCurrency(totalMoney)}</p>
             </CardContent>
           </Card>
