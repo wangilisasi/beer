@@ -1,7 +1,7 @@
 import BeerList from '@/components/BeerList';
 import type { Beer } from "@prisma/client";
 import { db } from "@/prisma";
-import Link from 'next/link';
+
 
 //fetch data directly from page
 async function getBeers(): Promise<Beer[]> {
