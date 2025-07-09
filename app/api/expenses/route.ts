@@ -25,14 +25,14 @@ export async function POST(request: NextRequest) {
       }
     });
     
-    // TODO: Fix bug - New users get 400 error when trying to create expenses
-    // because they don't have an expense tracker yet. Need to either:
-    // 1. Auto-create a default tracker for new users, OR
-    // 2. Return a more helpful error message directing them to set up budget first
-    // 3. Handle this gracefully in the UI to guide new users through setup
+    // Handle case where user doesn't have an expense tracker yet
     if (!tracker) {
       return NextResponse.json(
-        { error: 'No expense tracker found. Please set up your budget first.' },
+        { 
+          error: 'No expense tracker found. Please set up your budget first.',
+          code: 'NO_TRACKER',
+          message: 'You need to create a budget before you can add expenses. Please go back to the main page and set up your budget first.'
+        },
         { status: 400 }
       );
     }

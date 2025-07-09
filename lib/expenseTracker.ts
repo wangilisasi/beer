@@ -7,10 +7,14 @@ export interface ExpenseEntry {
   description: string;
 }
 
-export interface TrackerStats {
+export interface TrackerData {
   totalMoney: number;
   endDate: string;
   expenses: ExpenseEntry[];
+  hasTracker: boolean;
+}
+
+export interface ComputedStats {
   remainingDays: number;
   totalSpent: number;
   remainingMoney: number;
@@ -22,7 +26,13 @@ export interface TrackerStats {
   budgetPercentage: number;
 }
 
-function computeStats(totalMoney: number, endDate: string, expenses: ExpenseEntry[]): Omit<TrackerStats, "totalMoney" | "endDate" | "expenses"> {
+export interface TrackerStats {
+  data: TrackerData;
+  stats: ComputedStats;
+}
+
+export function computeStats(data: TrackerData): ComputedStats {
+  const { totalMoney, endDate, expenses } = data;
   const today = new Date();
   const end = new Date(endDate);
   const remainingDays = Math.max(0, Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
@@ -58,28 +68,27 @@ function computeStats(totalMoney: number, endDate: string, expenses: ExpenseEntr
   };
 }
 
-export async function getTrackerStats(userId: string): Promise<TrackerStats> {
+export async function getTrackerData(userId: string): Promise<TrackerData> {
   const tracker = await db.expenseTracker.findFirst({
-    where: {
-      userId: userId
-    },
+    where: { userId },
     include: {
       expenses: {
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy: { createdAt: "desc" },
       },
     },
   });
 
-  const totalMoney = tracker?.totalMoney ?? 0;
-  const endDate = tracker?.endDate ?? "2025-08-31";
-  const expenses = (tracker?.expenses ?? []) as ExpenseEntry[];
-
   return {
-    totalMoney,
-    endDate,
-    expenses,
-    ...computeStats(totalMoney, endDate, expenses),
+    hasTracker: tracker !== null,
+    totalMoney: tracker?.totalMoney ?? 0,
+    endDate: tracker?.endDate ?? "2025-08-31",
+    expenses: (tracker?.expenses ?? []) as ExpenseEntry[],
   };
+}
+
+export async function getTrackerStats(userId: string): Promise<TrackerStats> {
+  const data = await getTrackerData(userId);
+  const stats = computeStats(data);
+  
+  return { data, stats };
 } 
