@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Roboto, Pacifico } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -21,8 +21,6 @@ export const metadata: Metadata = {
   title: "Deutscher Bierentdecker",
   description: "Exploration of German beers and expense tracking",
   manifest: "/manifest.json",
-  themeColor: "#d97706",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -40,6 +38,14 @@ export const metadata: Metadata = {
       { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
     ],
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#d97706",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
