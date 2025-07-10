@@ -158,7 +158,7 @@ export default function NewUserSetup() {
                   <ul className="text-sm text-blue-800 space-y-1">
                     <li>• We'll calculate your daily spending target based on your budget and end date</li>
                     <li>• Track your expenses daily to stay within your budget</li>
-                    <li>• Get insights on whether you're on track or overspending</li>
+                    <li>• Get insights on whether you&apos;re on track or overspending</li>
                     <li>• You can always adjust your budget later if needed</li>
                   </ul>
                 </div>

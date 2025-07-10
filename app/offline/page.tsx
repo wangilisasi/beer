@@ -8,9 +8,9 @@ export default function OfflinePage() {
           <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl">📡</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">You're Offline</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">You&apos;re Offline</h1>
           <p className="text-gray-600">
-            It looks like you've lost your internet connection. Don't worry, you can still use some features of BierTracker!
+            It looks like you&apos;ve lost your internet connection. Don&apos;t worry, you can still use some features of BierTracker!
           </p>
         </div>
 
@@ -19,7 +19,7 @@ export default function OfflinePage() {
             <h3 className="font-semibold text-amber-800 mb-2">What you can do offline:</h3>
             <ul className="text-sm text-amber-700 space-y-1">
               <li>• View previously loaded beers and expenses</li>
-              <li>• Add new items (they'll sync when online)</li>
+              <li>• Add new items (they&apos;ll sync when online)</li>
               <li>• Browse cached pages</li>
             </ul>
           </div>
@@ -59,7 +59,7 @@ export default function OfflinePage() {
 
         <div className="mt-6 pt-4 border-t border-gray-200">
           <p className="text-xs text-gray-500">
-            Your offline data will automatically sync when you're back online.
+            Your offline data will automatically sync when you&apos;re back online.
           </p>
         </div>
       </div>

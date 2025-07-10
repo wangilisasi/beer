@@ -126,7 +126,7 @@ export default async function TrackerPage() {
             <div>
               <p className={`font-medium ${stats.isOnTrack ? "text-emerald-600" : "text-rose-600"}`}>{
                 stats.isOnTrack
-                  ? "You're on track! Your recent daily spending is within target."
+                  ? "You&apos;re on track! Your recent daily spending is within target."
                   : `Warning: Your avg 2 day spending (${formatCurrency(stats.recentDailySpend)}) exceeds your target)`
               }</p>
               <p className="text-sm text-gray-600 mt-1">Yesterday: <span className={`font-bold ${stats.yesterdaySpend <= stats.dailyTarget ? 'text-green-600' : 'text-rose-600'}`}>{formatCurrency(stats.yesterdaySpend)}</span> Today: <span className={`font-bold ${stats.todaySpend <= stats.dailyTarget ? 'text-green-600' : 'text-rose-600'}`}>{formatCurrency(stats.todaySpend)}</span></p>

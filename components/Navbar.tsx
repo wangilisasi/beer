@@ -1,6 +1,7 @@
 import { signOut, auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 
 export default async function Navbar() {
@@ -29,9 +30,11 @@ export default async function Navbar() {
               <>
                 <div className="flex items-center gap-2">
                   {session.user?.image && (
-                    <img
+                    <Image
                       src={session.user.image}
                       alt="Profile"
+                      width={32}
+                      height={32}
                       className="w-8 h-8 rounded-full"
                     />
                   )}
@@ -86,9 +89,11 @@ export default async function Navbar() {
                   <div className="px-4 py-2">
                     <div className="flex items-center gap-2 mb-3">
                       {session.user?.image && (
-                        <img
+                        <Image
                           src={session.user.image}
                           alt="Profile"
+                          width={32}
+                          height={32}
                           className="w-8 h-8 rounded-full"
                         />
                       )}

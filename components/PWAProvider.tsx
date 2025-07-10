@@ -111,7 +111,7 @@ export default function PWAProvider({ children }: { children: React.ReactNode })
       {/* Offline indicator */}
       {isOffline && (
         <div className="fixed top-0 left-0 right-0 bg-red-600 text-white text-center py-2 z-50">
-          <span className="text-sm">📡 You're offline - some features may be limited</span>
+          <span className="text-sm">📡 You&apos;re offline - some features may be limited</span>
         </div>
       )}
 
