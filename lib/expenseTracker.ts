@@ -9,6 +9,7 @@ export interface ExpenseEntry {
 
 export interface TrackerData {
   totalMoney: number;
+  startDate: string;
   endDate: string;
   expenses: ExpenseEntry[];
   hasTracker: boolean;
@@ -81,6 +82,7 @@ export async function getTrackerData(userId: string): Promise<TrackerData> {
   return {
     hasTracker: tracker !== null,
     totalMoney: tracker?.totalMoney ?? 0,
+    startDate: (tracker as { startDate?: string } | null)?.startDate ?? new Date().toISOString().split("T")[0],
     endDate: tracker?.endDate ?? "2025-08-31",
     expenses: (tracker?.expenses ?? []) as ExpenseEntry[],
   };
