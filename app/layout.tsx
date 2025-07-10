@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto, Pacifico } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import PWAProvider from "@/components/PWAProvider";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -62,8 +63,10 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={`${roboto.variable} ${pacifico.variable} antialiased`}>
-        <Navbar />
-        {children}
+        <PWAProvider>
+          <Navbar />
+          {children}
+        </PWAProvider>
       </body>
     </html>
   );
