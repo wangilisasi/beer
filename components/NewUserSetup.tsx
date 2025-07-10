@@ -52,7 +52,7 @@ export default function NewUserSetup() {
             Welcome to Your Expense Tracker!
           </h1>
           <p className="text-lg text-gray-600">
-            Let's set up your first budget to start tracking your expenses
+            Let&apos;s set up your first budget to start tracking your expenses
           </p>
         </div>
 
@@ -156,7 +156,7 @@ export default function NewUserSetup() {
                 <div>
                   <h4 className="font-medium text-blue-900 mb-1">How it works:</h4>
                   <ul className="text-sm text-blue-800 space-y-1">
-                    <li>• We'll calculate your daily spending target based on your budget and end date</li>
+                    <li>• We&apos;ll calculate your daily spending target based on your budget and end date</li>
                     <li>• Track your expenses daily to stay within your budget</li>
                     <li>• Get insights on whether you&apos;re on track or overspending</li>
                     <li>• You can always adjust your budget later if needed</li>
