@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { totalMoney, endDate } = body;
+    const { totalMoney, startDate, endDate } = body;
 
     // Check if tracker already exists for this user
     const existingTracker = await prisma.expenseTracker.findFirst({
@@ -76,6 +76,7 @@ export async function POST(request: NextRequest) {
         where: { id: existingTracker.id },
         data: {
           totalMoney: parseFloat(totalMoney),
+          startDate,
           endDate,
           updatedAt: new Date()
         },
@@ -94,6 +95,7 @@ export async function POST(request: NextRequest) {
       const newTracker = await prisma.expenseTracker.create({
         data: {
           totalMoney: parseFloat(totalMoney),
+          startDate,
           endDate,
           userId: session.user.id
         },
