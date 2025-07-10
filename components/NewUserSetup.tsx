@@ -8,13 +8,14 @@ import { Calendar, DollarSign, Target, ArrowRight } from "lucide-react";
 
 export default function NewUserSetup() {
   const [budget, setBudget] = useState("");
+  const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
   const [endDate, setEndDate] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const router = useRouter();
 
   const handleCreateBudget = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!budget || !endDate || isCreating) return;
+    if (!budget || !startDate || !endDate || isCreating) return;
 
     try {
       setIsCreating(true);
@@ -23,6 +24,7 @@ export default function NewUserSetup() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           totalMoney: parseFloat(budget),
+          startDate: startDate,
           endDate: endDate,
         }),
       });
@@ -39,8 +41,7 @@ export default function NewUserSetup() {
     }
   };
 
-  // Get today's date for min date
-  const today = new Date().toISOString().split("T")[0];
+  // previously used for min date validation; no longer needed after adding both date pickers
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
@@ -69,7 +70,7 @@ export default function NewUserSetup() {
             <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
               <Calendar className="w-6 h-6 text-green-600" />
             </div>
-            <h3 className="font-semibold text-gray-900 mb-1">Choose End Date</h3>
+            <h3 className="font-semibold text-gray-900 mb-1">Choose Dates</h3>
             <p className="text-sm text-gray-600">When do you want to finish spending?</p>
           </div>
           <div className="text-center p-4">
@@ -108,27 +109,40 @@ export default function NewUserSetup() {
                 </p>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  📅 Budget End Date
-                </label>
-                <input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  min={today}
-                  className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-                  disabled={isCreating}
-                  required
-                />
-                <p className="text-sm text-gray-500 mt-1">
-                  When do you want to finish spending this budget?
-                </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    🟢 Budget Start Date
+                  </label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    max={endDate || undefined}
+                    className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                    disabled={isCreating}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    🔴 Budget End Date
+                  </label>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    min={startDate}
+                    className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                    disabled={isCreating}
+                    required
+                  />
+                </div>
               </div>
 
               <Button
                 type="submit"
-                disabled={!budget || !endDate || isCreating}
+                disabled={!budget || !startDate || !endDate || isCreating}
                 className="w-full py-4 text-lg"
                 variant="default"
               >

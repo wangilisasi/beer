@@ -27,6 +27,7 @@ generator client {
   model ExpenseTracker {
     id         String    @id @default(auto()) @map("_id") @db.ObjectId
     totalMoney Float
+    startDate  String?
     endDate    String
     createdAt  DateTime  @default(now())
     updatedAt  DateTime  @updatedAt

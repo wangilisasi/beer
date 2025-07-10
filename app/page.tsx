@@ -42,7 +42,7 @@ export default async function TrackerPage() {
                   <span className="text-green-500 mr-2">📅</span>
                   <span className="text-gray-600 font-medium">Start Date</span>
                 </div>
-                <p className="text-lg font-bold text-gray-900">2025-07-04</p>
+                <p className="text-lg font-bold text-gray-900">{data.startDate}</p>
               </div>
               <div className="text-center border-b sm:border-b-0 pb-4 sm:pb-0">
                 <div className="flex items-center justify-center mb-2">
@@ -68,7 +68,7 @@ export default async function TrackerPage() {
             <CardContent className="p-4 relative">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-sm font-medium text-gray-600">Total Budget</h3>
-                <BudgetDialog totalMoney={data.totalMoney} endDate={data.endDate}>
+                <BudgetDialog totalMoney={data.totalMoney} startDate={data.startDate} endDate={data.endDate}>
                   <button className="text-gray-400 hover:text-blue-600 transition-colors duration-200 p-1 rounded-full hover:bg-blue-50">
                     <Edit size={16} />
                   </button>
