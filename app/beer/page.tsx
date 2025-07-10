@@ -1,7 +1,7 @@
 import BeerList from '@/components/BeerList';
 import type { Beer } from "@prisma/client";
 import { db } from "@/prisma";
-import Link from 'next/link';
+
 
 //fetch data directly from page
 async function getBeers(): Promise<Beer[]> {
@@ -24,12 +24,6 @@ export default async function Home() {
           <h1 className="text-4xl font-pacifico tracking-tight pb-4 mb-4 bg-gradient-to-r from-[#462400] to-[#8B4513] text-transparent bg-clip-text">
             German Beer Explorer
           </h1>
-          <Link 
-            href="/tracker" 
-            className="inline-block px-6 py-3 bg-[#daa520] text-white rounded-lg hover:bg-[#c99510] transition-colors font-medium"
-          >
-            To Tracker
-          </Link>
         </div>
         <BeerList initialBeers={beers} />
       </div>
